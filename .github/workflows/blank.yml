@@ -1,0 +1,60 @@
+name: get_bootimg_from_payload.bin
+
+on:
+  watch:
+    types: [started]
+    
+env:
+  ROM_URL: https://bigota.d.miui.com/22.2.17/miui_VENUSPRE_22.2.17_9b54ffe4e2_12.0.zip
+  MAGISK_ZIP: https://github.com/topjohnwu/Magisk/releases/download/v21.4/Magisk-v21.4.zip
+  TZ: Asia/Shanghai
+
+jobs:
+  make:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Clean Up Disk Space
+      run: |
+        docker rmi `docker images -q`
+        #sudo rm -rf /usr/share/dotnet /etc/mysql /etc/php /etc/apt/sources.list.d
+        #sudo -E apt-get -y purge azure-cli ghc* zulu* hhvm llvm* firefox google* dotnet* powershell openjdk* mysql* php*
+        sudo -E apt-get -y autoremove --purge
+        sudo -E apt-get clean 
+        
+    - name: Download the tools
+      run: |
+       cd ~
+       wget https://github.com/tobyxdd/android-ota-payload-extractor/releases/download/v0.1/android-ota-payload-extractor_linux_amd64
+       chmod +x android-ota-payload-extractor_linux_amd64
+       
+  
+    - name: Download the ROM and Magisk
+      run: |
+       cd ~
+       wget -O rom.zip $ROM_URL
+       wget -O magisk.zip $MAGISK_ZIP
+
+    
+    - name: extract the miui rom and Magisk
+      run: |
+       cd ~
+       unzip magisk.zip
+       cp common/*.sh x86
+       sed -i 's#getprop#adb shell getprop#g' x86/util_functions.sh
+       sed -i 's#/proc/self/fd/$OUTFD#/dev/null"#g' x86/util_functions.sh
+       ./android-ota-payload-extractor_linux_amd64 rom.zip
+   
+    - name: Patch Magisk to boot
+      run: |
+        cd ~
+        cd x86
+        sh boot_patch.sh ../boot.img
+        tar -zcvf ../boot.tar.gz stock_boot.img new-boot.img
+    
+    - name: Upload the bootimg to WeTransfer
+      run: |
+        cd ~
+        curl -sL https://git.io/file-transfer | sh
+        ./transfer wet ~/boot.tar.gz
