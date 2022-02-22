@@ -44,6 +44,7 @@ jobs:
        cp common/*.sh x86
        sed -i 's#getprop#adb shell getprop#g' x86/util_functions.sh
        sed -i 's#/proc/self/fd/$OUTFD#/dev/null"#g' x86/util_functions.sh
+       sed -i 's#. ./util_functions.sh#sh util_functions.sh#g' x86/boot_patch.sh
        ./android-ota-payload-extractor_linux_amd64 rom.zip
    
     - name: Patch Magisk to boot
