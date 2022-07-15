@@ -5,7 +5,7 @@ on:
     types: [started]
     
 env:
-  ROM_URL: https://bigota.d.miui.com/22.2.17/miui_VENUSPRE_22.2.17_9b54ffe4e2_12.0.zip
+  ROM_URL: https://www.coolapk.com/link?url=https%3A%2F%2Fbigota.d.miui.com%2F22.7.13%2Fmiui_VENUSPRE_22.7.13_c949b2478e_12.0.zip
   MAGISK_ZIP: https://github.com/topjohnwu/Magisk/releases/download/v21.4/Magisk-v21.4.zip
   TZ: Asia/Shanghai
 
