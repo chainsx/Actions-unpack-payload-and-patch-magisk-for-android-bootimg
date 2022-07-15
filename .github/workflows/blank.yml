@@ -26,7 +26,7 @@ jobs:
     - name: Download the tools
       run: |
        cd ~
-       wget https://github.com/tobyxdd/android-ota-payload-extractor/releases/download/v0.1/android-ota-payload-extractor_linux_amd64
+       wget https://github.com/tobyxdd/android-ota-payload-extractor/releases/download/v1.0/android-ota-payload-extractor_linux_amd64
        chmod +x android-ota-payload-extractor_linux_amd64
        
   
